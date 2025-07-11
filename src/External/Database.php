@@ -5,12 +5,14 @@ use App\Interfaces\DbConnectionInterface;
 use PDO;
 use PDOException;
 
-class Database implements DbConnectionInterface {
-    private static $instance = null;
+class Database implements DbConnectionInterface
+{
+    private static ?PDO $instance = null;
 
-    public static function connect() {
+    public function getConnection(): PDO
+    {
         if (!self::$instance) {
-            $host = 'db'; 
+            $host = 'db';
             $dbname = 'meubanco';
             $username = 'root';
             $password = 'secret';
@@ -26,3 +28,4 @@ class Database implements DbConnectionInterface {
         return self::$instance;
     }
 }
+

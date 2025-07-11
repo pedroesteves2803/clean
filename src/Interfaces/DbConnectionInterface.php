@@ -1,6 +1,8 @@
 <?php
 namespace App\Interfaces;
 
+use PDO;
+
 interface DbConnectionInterface {
-    public static function connect();
+    public function getConnection(): PDO;
 }
