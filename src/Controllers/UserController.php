@@ -3,21 +3,20 @@ namespace App\Controllers;
 
 use App\Gateway\UserGateway;
 use App\Interfaces\DbConnectionInterface;
+use App\Usecases\CreateUserUseCase;
 use App\Usecases\UserUsecase;
 
 class UserController{
 
-    private DbConnectionInterface $connection;
-    
-    public function __construct(DbConnectionInterface $dbConnection)
+    private CreateUserUseCase $usecase;
+
+    public function __construct(CreateUserUseCase $usecase)
     {
-        $this->connection = $dbConnection;
+        $this->usecase = $usecase;
     }
 
-    public function create(string $name, ){
+    public function create(string $name){
         
-        $gateway = new UserGateway($this->connection);
-
-        UserUsecase::createUser($name, $gateway);
+        $this->usecase->execute($name);
     }
 }
