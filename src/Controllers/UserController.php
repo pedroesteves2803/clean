@@ -37,7 +37,7 @@ class UserController{
     public function delete(int $id){
         try {
             $this->deleteUserUseCase->execute($id);
-            $this->presenter->present(['message' => 'Usuário deletado com sucesso.']);
+            $this->presenter->present(['message' => 'Usuario deletado com sucesso.']);
         } catch (\Throwable $e) {
             $this->presenter->presentError($e->getMessage());
         }    
