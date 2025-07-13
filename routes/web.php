@@ -12,8 +12,8 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 if ($uri === '/user/create') {
     $name = $_GET['name'] ?? 'Pedro';
-    $dbConnection = new Database(); // implementa DbConnectionInterface
-    $gateway = new UserGateway($dbConnection); // implementa UserGatewayInterface
+    $dbConnection = new Database(); 
+    $gateway = new UserGateway($dbConnection);
     $usecase = new CreateUserUseCase($gateway);
     $controller = new UserController($usecase);
     $controller->create($name);
