@@ -4,7 +4,7 @@ namespace App\Usecases;
 use App\Entities\User;
 use App\Interfaces\UserGatewayInterface;
 
-class CreateUserUseCase{
+class DeleteUserUseCase{
 
     private UserGatewayInterface $gateway;
 
@@ -13,10 +13,9 @@ class CreateUserUseCase{
         $this->gateway = $gateway;
     }
 
-    public function execute(string $name): User
+    public function execute(int $id): void
     {
-        $user = new User($name);
-        return $this->gateway->createUser($user);
+        $this->gateway->deleteUser($id);
     }
 
 }
