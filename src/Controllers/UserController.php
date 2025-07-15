@@ -4,20 +4,18 @@ namespace App\Controllers;
 use App\Gateway\UserGateway;
 use App\Interfaces\DbConnectionInterface;
 use App\Interfaces\UserPresenterInterface;
+use App\Presenters\UserPresenter;
 use App\Usecases\CreateUserUseCase;
 use App\Usecases\DeleteUserUseCase;
 
 class UserController{
 
     private DbConnectionInterface $dbConnectionInterface;
-    private UserPresenterInterface $presenter;
 
     public function __construct(
-        UserPresenterInterface $userPresenterInterface,
         DbConnectionInterface $dbConnectionInterface
     )
     {
-        $this->presenter = $userPresenterInterface;
         $this->dbConnectionInterface = $dbConnectionInterface;
     }
 
@@ -29,7 +27,8 @@ class UserController{
 
             $user = $createUserUseCase->execute($name);
 
-            $data = $this->presenter->present([
+            $presenter = new UserPresenter();
+            $data = $presenter->present([
                 'id' => $user->getId(),
                 'nome' => $user->getName()
             ]);

@@ -9,10 +9,8 @@ require_once '../src/Controllers/UserController.php';
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $dbConnection = new Database(); 
-$userPresenter = new UserPresenter();
 
 $userController = new UserController(  
-    $userPresenter, 
     $dbConnection
 );
 
