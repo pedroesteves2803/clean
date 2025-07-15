@@ -14,7 +14,7 @@ class UserGateway implements UserGatewayInterface {
         $this->connection = $dbConnection;
     }
 
-    public function createUser(User $user): User {
+    public function createUser(User $user): int {
         $pdo = $this->connection->getConnection();
 
         $stmt = $pdo->prepare("INSERT INTO users (name) VALUES (:name)");
@@ -22,9 +22,8 @@ class UserGateway implements UserGatewayInterface {
         $stmt->execute();
 
         $id = (int) $pdo->lastInsertId();
-        $user->setId($id);
 
-        return $user;
+        return $id;
     }
 
     public function deleteUser(int $id): void{

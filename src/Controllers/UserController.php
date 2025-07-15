@@ -1,45 +1,58 @@
 <?php
 namespace App\Controllers;
 
+use App\Gateway\UserGateway;
+use App\Interfaces\DbConnectionInterface;
 use App\Interfaces\UserPresenterInterface;
 use App\Usecases\CreateUserUseCase;
 use App\Usecases\DeleteUserUseCase;
 
 class UserController{
 
-    private CreateUserUseCase $createUserUseCase;
-    private DeleteUserUseCase $deleteUserUseCase;
+    private DbConnectionInterface $dbConnectionInterface;
     private UserPresenterInterface $presenter;
 
     public function __construct(
-        CreateUserUseCase $createUserUseCase, 
-        DeleteUserUseCase $deleteUserUseCase, 
-        UserPresenterInterface $userPresenterInterface
+        UserPresenterInterface $userPresenterInterface,
+        DbConnectionInterface $dbConnectionInterface
     )
     {
-        $this->createUserUseCase = $createUserUseCase;
-        $this->deleteUserUseCase = $deleteUserUseCase;
         $this->presenter = $userPresenterInterface;
+        $this->dbConnectionInterface = $dbConnectionInterface;
     }
 
     public function create(string $name){
         try {
-            $user = $this->createUserUseCase->execute($name);
-            $this->presenter->present([
+
+            $gateway = new UserGateway($this->dbConnectionInterface);
+            $createUserUseCase = new CreateUserUseCase($gateway);
+
+            $user = $createUserUseCase->execute($name);
+
+            $data = $this->presenter->present([
                 'id' => $user->getId(),
-                'name' => $user->getName()
+                'nome' => $user->getName()
             ]);
+
+            header('Content-Type: application/json');
+            echo json_encode($data);
+
         } catch (\Throwable $e) {
-            $this->presenter->presentError($e->getMessage());
+            echo $e;
         }    
     }
 
     public function delete(int $id){
         try {
-            $this->deleteUserUseCase->execute($id);
-            $this->presenter->present(['message' => 'Usuario deletado com sucesso.']);
+
+            $gateway = new UserGateway($this->dbConnectionInterface);
+            $deleteUserUseCase = new DeleteUserUseCase($gateway);
+
+            $deleteUserUseCase->execute($id);
+
+            header('Content-Type: application/json');
+            echo json_encode(['message' => 'Usuario deletado com sucesso.']);
         } catch (\Throwable $e) {
-            $this->presenter->presentError($e->getMessage());
         }    
     }
 }

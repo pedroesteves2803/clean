@@ -2,21 +2,20 @@
 
 use App\Controllers\UserController;
 use App\External\Database;
-use App\Gateway\UserGateway;
 use App\Presenters\JsonUserPresenter;
-use App\Usecases\CreateUserUseCase;
-use App\Usecases\DeleteUserUseCase;
+use App\Presenters\UserPresenter;
 
 require_once '../src/Controllers/UserController.php';
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $dbConnection = new Database(); 
-$gateway = new UserGateway($dbConnection);
-$createUserUseCase = new CreateUserUseCase($gateway);
-$deleteUserUseCase = new DeleteUserUseCase($gateway);
-$jsonUserPresenter = new JsonUserPresenter();
-$userController = new UserController($createUserUseCase, $deleteUserUseCase, $jsonUserPresenter);
+$userPresenter = new UserPresenter();
+
+$userController = new UserController(  
+    $userPresenter, 
+    $dbConnection
+);
 
 if ($uri === '/user/create') {
     $name = $_GET['name'] ?? 'Pedro';

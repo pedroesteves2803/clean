@@ -16,7 +16,11 @@ class CreateUserUseCase{
     public function execute(string $name): User
     {
         $user = new User($name);
-        return $this->gateway->createUser($user);
+        $idUSer = $this->gateway->createUser($user);
+
+        $user->setId($idUSer);
+
+        return $user;
     }
 
 }
