@@ -2,7 +2,6 @@
 
 use App\Controllers\UserController;
 use App\External\Database;
-use App\Presenters\JsonUserPresenter;
 use App\Presenters\UserPresenter;
 
 require_once '../src/Controllers/UserController.php';
