@@ -1,0 +1,36 @@
+name: Deploy PHP App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Instalar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo, pdo_mysql
+          coverage: none
+
+      - name: Instalar dependências
+        run: composer install --no-progress --prefer-dist --no-interaction
+
+      - name: Rodar testes
+        run: ./vendor/bin/phpunit
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy para servidor
+        run: |
+          echo "Fazendo deploy para produção..."
