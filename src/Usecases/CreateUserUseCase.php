@@ -1,6 +1,7 @@
 <?php
 namespace App\Usecases;
 
+use App\Dto\NewUserDTO;
 use App\Entities\User;
 use App\Interfaces\UserGatewayInterface;
 
@@ -13,14 +14,12 @@ class CreateUserUseCase{
         $this->gateway = $gateway;
     }
 
-    public function execute(string $name): User
+    public function execute(NewUserDTO $dto): User
     {
-        $user = new User($name);
-        $idUSer = $this->gateway->createUser($user);
+        $user = new User($dto->name);
+        $newUser = $this->gateway->createUser($user);
 
-        $user->setId($idUSer);
-
-        return $user;
+        return $newUser;
     }
 
 }

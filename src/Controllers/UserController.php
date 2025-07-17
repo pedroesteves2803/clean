@@ -1,6 +1,8 @@
 <?php
 namespace App\Controllers;
 
+use App\Dto\DeleteUSerDTO;
+use App\Dto\NewUserDTO;
 use App\Gateway\UserGateway;
 use App\Interfaces\DbConnectionInterface;
 use App\Interfaces\UserPresenterInterface;
@@ -19,38 +21,33 @@ class UserController{
         $this->dbConnectionInterface = $dbConnectionInterface;
     }
 
-    public function create(string $name){
+    public function create(NewUserDTO $dto){
         try {
 
             $gateway = new UserGateway($this->dbConnectionInterface);
             $createUserUseCase = new CreateUserUseCase($gateway);
 
-            $user = $createUserUseCase->execute($name);
+            $user = $createUserUseCase->execute($dto);
 
             $presenter = new UserPresenter();
-            $data = $presenter->present([
+            $presenter = $presenter->present([
                 'id' => $user->getId(),
                 'nome' => $user->getName()
             ]);
 
-            header('Content-Type: application/json');
-            echo json_encode($data);
-
+            return $presenter;
         } catch (\Throwable $e) {
             echo $e;
         }    
     }
 
-    public function delete(int $id){
+    public function delete(DeleteUSerDTO $dto){
         try {
 
             $gateway = new UserGateway($this->dbConnectionInterface);
             $deleteUserUseCase = new DeleteUserUseCase($gateway);
 
-            $deleteUserUseCase->execute($id);
-
-            header('Content-Type: application/json');
-            echo json_encode(['message' => 'Usuario deletado com sucesso.']);
+            $deleteUserUseCase->execute($dto);
         } catch (\Throwable $e) {
         }    
     }
